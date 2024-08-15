@@ -38,9 +38,7 @@ para, _ = parser.parse_known_args()
 para = vars(para)
 
 
-# 模型调节默认参数
 def get_params():
-    # 模型调节参数
     parser = argparse.ArgumentParser(description='VIT default param')
     parser.add_argument("--batch_size", type=int,
                         default=6, help="data directory")

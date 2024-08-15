@@ -4,7 +4,7 @@ import torch
 from VITNNi import SE_VIT_Decoder
 from CNN_LSTM import Net, CNN, LSTM, MLP
 
-# 是否打乱顺序
+
 # shuffle = [False]
 shuffle = [True]
 
@@ -24,11 +24,7 @@ cell_num = 8
 data_path="./data/data.csv"
 SOH_path="./data/SOH.csv"
 
-"""
-# 20->4效果  input output
-atten0 效果不错，不改了
 
-"""
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 root = "./RESU_decoder_20_4/"
@@ -81,29 +77,3 @@ for Model in model:
 
 
 
-"""
-    30%训练的的默认参数
-    "batch_size": 6,
-    "decoderFc_size": 96,
-    "lr": 0.001,
-    momentum 0.1
-    "attn_drop_ratio": 0,
-    "depth": 3,
-    "num_heads": 4,
-    "patch_size": 2,
-    "embedding": 800
-
-    取得不错效果的参数
-    {
-        "batch_size": 12,
-        "decoderFc_size": 500,
-        "lr": 0.001,
-        "momentum": 0.1,
-        "attn_drop_ratio": 0,
-        "depth": 2,
-        "num_heads": 10,
-        "patch_size": 10,
-        "embedding": 800
-    }
-    文章两端对其
-"""
