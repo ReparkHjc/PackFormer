@@ -1,0 +1,13 @@
+experimentName: SE-VIT
+searchSpaceFile: search_space.json
+trialCommand: python para_nni.py  # NOTE: change "python3" to "python" if you are using Windows
+trialConcurrency: 1
+maxTrialNumber: 10000             # Generate at most 10 trials.
+#maxExperimentDuration: 5h       # Stop generating trials after 1 hour.
+tuner:
+  name: TPE
+  classArgs:
+    optimize_mode: minimize
+trainingService:
+  platform: local
+  useActiveGpu: false

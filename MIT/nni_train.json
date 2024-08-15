@@ -1,0 +1,29 @@
+{
+  "searchSpace": {
+    "batch_size": {
+      "_type": "choice",
+      "_value": [2,4,6, 8, 10,12]
+    },
+    "decoderFc_size": {
+      "_type": "choice",
+      "_value": [200,300,400, 500,600, 700, 800]
+    },
+    "depth": {
+      "_type": "choice",
+      "_value": [2, 4, 6, 8]
+    },
+    "num_heads": {
+      "_type": "choice",
+      "_value": [2, 5, 10, 20]
+    },
+    "embedding": {
+      "_type": "choice",
+      "_value": [400, 600,800,1000, 1200]
+    }
+  },
+  "trial": {
+    "command": "python auto_grid.py",
+    "codeDir": "./",
+    "gpuNum": 1
+  }
+}

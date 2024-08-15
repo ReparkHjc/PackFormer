@@ -1,0 +1,11 @@
+{
+    "batch_size": {"_type": "choice", "_value": [6, 12]},
+    "decoderFc_size": {"_type": "choice", "_value": [32, 96, 500]},
+    "lr": {"_type": "choice", "_value": [0.001, 0.0001]},
+    "momentum": {"_type": "choice", "_value": [0.05, 0.1]},
+    "attn_drop_ratio": {"_type": "choice", "_value": [ 0.0, 0.25, 0.5]},
+    "depth": {"_type": "choice", "_value": [2, 3, 4, 5, 6]},
+    "num_heads": {"_type": "choice", "_value": [ 4, 10]},
+    "patch_size": {"_type": "choice", "_value": [2, 4, 6, 10]},
+    "embedding": {"_type": "choice", "_value": [200, 500, 800]}
+ }

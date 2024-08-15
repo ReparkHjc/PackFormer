@@ -1,0 +1,250 @@
+# import math
+# import matplotlib
+# import numpy as np
+# import pandas  as pd
+# import seaborn as sns
+# import time
+#
+# import torch.nn
+#
+# from data_preprocess import train_val_dataset_sw2
+# from datetime import date
+# from matplotlib import pyplot as plt
+# from pylab import rcParams
+# from sklearn.metrics import mean_squared_error
+# from sklearn.preprocessing import StandardScaler
+# from tqdm import tqdm
+# import xgboost as xgb
+# model_seed = 100
+# from sklearn.model_selection import GridSearchCV
+# from sklearn.ensemble import RandomForestRegressor
+#
+# from data_preprocess import train_val_dataset_sw2
+#
+# SOH_path = r"C:\Users\xzh\PycharmProjects\SOH_prediction\数据处理\SOH.csv"
+# data_path = r"C:\Users\xzh\PycharmProjects\SOH_prediction\数据处理\data.csv"
+#
+#
+# # xgboost
+# parameters={'n_estimators':[90],
+#             'max_depth':[7],
+#             'learning_rate': [0.3],
+#             'min_child_weight':range(5, 21, 1),
+#             #'subsample':[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+#             #'gamma':[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+#             #'colsample_bytree':[0.5, 0.6, 0.7, 0.8, 0.9, 1],
+#             #'colsample_bylevel':[0.5, 0.6, 0.7, 0.8, 0.9, 1]
+#             }
+# #parameters={'max_depth':range(2,10,1)}
+# model=xgb.XGBRegressor(seed=model_seed,
+#                      n_estimators=100,
+#                      max_depth=3,
+#                      eval_metric='rmse',
+#                      learning_rate=0.1,
+#                      min_child_weight=1,
+#                      subsample=1,
+#                      colsample_bytree=1,
+#                      colsample_bylevel=1,
+#                      gamma=0)
+# gs=GridSearchCV(estimator= model,param_grid=parameters,cv=5,refit= True,scoring='neg_mean_squared_error')
+#
+# # Rf
+# # model = RandomForestRegressor(n_estimators=200, random_state=0)
+#
+# def RMSE(y_true, y_pred):
+#     return np.linalg.norm(y_true-y_pred, ord=2)/len(y_true)**0.5
+#
+#
+# import numpy as np
+# import numpy as py
+# import torch.nn as nn
+# import torch
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import torch.utils.data
+# import random
+# import os
+#
+# def date_preprocess(data, data_num, pitch_row_num, row_num):
+#     """
+#         Args:
+#                 data:电池全部数据
+#                 data_num:从电池数据中随机抽取的数目
+#                 pitch_row_num:每个小batch的数目，2*2，或者3*3或其他
+#                 row_num:分成多少个batch
+#     """
+#
+#     data_Matrix = py.zeros((row_num * pitch_row_num, row_num * pitch_row_num), dtype=float)
+#
+#     if data_num % (pitch_row_num * pitch_row_num) != 0 or data_num % row_num != 0:
+#         raise ValueError("数据维度不对")
+#
+#     # for i in data:
+#     # 行
+#     for j in range(row_num):
+#         # 列
+#         for k in range(row_num):
+#             # 行
+#             for j1 in range(pitch_row_num):
+#                 # 列
+#                 for k1 in range(pitch_row_num):
+#                     first_num = j * pitch_row_num * pitch_row_num * row_num + k * pitch_row_num * pitch_row_num + 1
+#                     first_num = first_num + j1 * pitch_row_num + k1
+#                     data_Matrix[pitch_row_num * j + j1, pitch_row_num * k + k1] = data[first_num - 1]
+#
+#     return data_Matrix
+#
+#
+#
+# def con(u, i, t)->torch.Tensor:
+#     """
+#         Args:
+#                 u:电池的电压
+#                 i:电流
+#                 t:温度
+#     """
+#     list_U = u
+#     list_I = i
+#     list_T = t
+#     list = [list_U, list_I, list_T]
+#     data_tensor = torch.Tensor(list)
+#     return data_tensor.cuda()
+#
+#
+# # os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# print(device)
+#
+#
+#
+# # 是否顺序加载模型改train_num=idx_t[train_num]
+# data = pd.read_csv(data_path,header=None)
+# data.columns = ["t1", "q1", "T1", "t2", "q2", "T2", "t3", "q3",'T3']
+# SOH = pd.read_csv(SOH_path,header=None)
+# # Time,V,i,t
+#
+# SOH_list = SOH.values.tolist()
+# SOH_list = torch.Tensor(SOH_list).cuda()
+#
+# # V1 = py.array(data["U1"]).reshape(1, -1)
+# t1 = py.array(data["t1"]).reshape(1, -1)
+# q1 = py.array(data["q1"]).reshape(1, -1)
+# T1 = py.array(data["T1"]).reshape(1, -1)
+#
+# # U2 = py.array(data["U2"]).reshape(1, -1)
+# t2 = py.array(data["t2"]).reshape(1, -1)
+# q2 = py.array(data["q2"]).reshape(1, -1)
+# T2 = py.array(data["T2"]).reshape(1, -1)
+#
+# t3 = py.array(data["t3"]).reshape(1, -1)
+# q3 = py.array(data["q3"]).reshape(1, -1)
+# T3 = py.array(data["T3"]).reshape(1, -1)
+#
+#
+# random.seed(1)
+#
+#
+# idx_v = []
+# idx_t = random.sample(range(0, 110), 70)
+# idx_t = py.sort(idx_t)
+# all_idx = py.arange(0, 110, 1)
+# for i in range(len(all_idx)):
+#     for j in range(len(idx_t)):
+#         if all_idx[i] == idx_t[j]:
+#             idx_v.append(i)
+# idx_v = py.delete(all_idx, idx_v)
+# idx_v=py.array(idx_v)
+#
+# is_first_run=0
+#
+# num=196
+# pitch_num=14
+# sw_shape=4
+# row_pitch=2
+# for train_num in range(0,80):
+#     # train_num=idx_t[train_num]
+#     t_1 = date_preprocess(t1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_1 = date_preprocess(q1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_1 = date_preprocess(T1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor1 = con(t_1, q_1, T_1)
+#     data_tensor1 = data_tensor1.unsqueeze(dim=0)
+#
+#
+#     t_2 = date_preprocess(t2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_2 = date_preprocess(q2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_2 = date_preprocess(T2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor2 = con(t_2, q_2, T_2)
+#     data_tensor2 = data_tensor2.unsqueeze(dim=0)
+#
+#     t_3 = date_preprocess(t3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_3 = date_preprocess(q3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_3 = date_preprocess(T3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor3 = con(t_3, q_3, T_3)
+#     data_tensor3 = data_tensor3.unsqueeze(dim=0)
+#
+#
+#     data_tensor_all = torch.cat([data_tensor1, data_tensor2, data_tensor3], dim=0).unsqueeze(dim=0)
+#
+#
+#     if is_first_run == 0:
+#         is_first_run+=1
+#         data_tensor=data_tensor_all
+#         SOH = SOH_list[train_num+4].unsqueeze(dim=0)
+#     else:
+#         data_tensor = torch.cat([data_tensor,data_tensor_all], dim=0)
+#         SOH=torch.cat([SOH,SOH_list[train_num+4].unsqueeze(dim=0)])
+#
+# data_tensor=data_tensor.cpu().numpy().reshape(80,-1)
+# SOH_train=SOH.cpu().numpy()
+#
+# model.fit(data_tensor,SOH_train)
+#
+# SOH1=model.predict(data_tensor)
+#
+# is_first_run = 0
+# for train_num in range(80, 110):
+#     # train_num = idx_v[train_num]
+#     t_1 = date_preprocess(t1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_1 = date_preprocess(q1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_1 = date_preprocess(T1[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor1 = con(t_1, q_1, T_1)
+#     data_tensor1 = data_tensor1.unsqueeze(dim=0)
+#
+#     t_2 = date_preprocess(t2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_2 = date_preprocess(q2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_2 = date_preprocess(T2[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor2 = con(t_2, q_2, T_2)
+#     data_tensor2 = data_tensor2.unsqueeze(dim=0)
+#
+#     t_3 = date_preprocess(t3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     q_3 = date_preprocess(q3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     T_3 = date_preprocess(T3[0][train_num * num:(sw_shape + train_num) * num], num * sw_shape, row_pitch, pitch_num)
+#     data_tensor3 = con(t_3, q_3, T_3)
+#     data_tensor3 = data_tensor3.unsqueeze(dim=0)
+#
+#     data_tensor_all = torch.cat([data_tensor1, data_tensor2, data_tensor3], dim=0).unsqueeze(dim=0)
+#
+#     if is_first_run == 0:
+#         is_first_run += 1
+#         data_tensor = data_tensor_all
+#         SOH = SOH_list[train_num + 4].unsqueeze(dim=0)
+#     else:
+#         data_tensor = torch.cat([data_tensor, data_tensor_all], dim=0)
+#         SOH = torch.cat([SOH, SOH_list[train_num + 4].unsqueeze(dim=0)])
+#
+# data_tensor=data_tensor.cpu().numpy().reshape(30,-1)
+# SOH=SOH.cpu().numpy()
+#
+# SOH_val=model.predict(data_tensor)
+# rmse=RMSE(SOH.squeeze(),SOH_val)
+# print(rmse)
+#
+# SOH_train=np.concatenate((SOH_train,SOH),axis=0)
+# SOH_predict=np.concatenate((SOH1,SOH_val),axis=0)
+#
+# x=np.linspace(1,len(SOH_train),num=len(SOH_train))
+# plt.plot(x,SOH_train,label='predict_Rf',color='b')
+# plt.plot(x,SOH_predict,label='labels',color='r')
+#
+# plt.legend()
+# plt.show()

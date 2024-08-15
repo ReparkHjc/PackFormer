@@ -1,0 +1,8 @@
+{
+    "batch_size": {"_type": "choice", "_value": [6]},
+    "decoderFc_size": {"_type": "choice", "_value": [32,96,500]},
+    "attn_drop_ratio": {"_type": "choice", "_value": [0.5, 0.4,0.3]},
+    "depth": {"_type": "choice", "_value": [2,3,4]},
+    "patch_size": {"_type": "choice", "_value": [2,4,6]},
+    "embedding": {"_type": "choice", "_value": [200,500,1024]}
+ }
